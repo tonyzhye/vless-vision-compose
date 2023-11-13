@@ -1,0 +1,16 @@
+{
+  "cSpell.words": [
+    "atpath",
+    "loglevel",
+    "outbounds",
+    "rprx",
+    "vless",
+    "vmess",
+    "xtls",
+    "xver",
+    "yoursite"
+  ],
+  "files.associations": {
+    "*.json.raw": "jsonc"
+  }
+}
