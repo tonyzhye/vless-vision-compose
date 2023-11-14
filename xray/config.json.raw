@@ -2,39 +2,26 @@
   "log": {
     "loglevel": "warning"
   },
-  "routing": {
-    "domainStrategy": "IPIfNonMatch",
-    "rules": [
-      {
-        "type": "field",
-        "ip": [
-          "geoip:cn"
-        ],
-        "outboundTag": "block"
-      }
-    ]
-  },
   "inbounds": [
     {
-      "listen": "0.0.0.0",
       "port": 443,
       "protocol": "vless",
       "settings": {
         "clients": [
           {
             "id": "98bc7998-8e06-4193-84d2-38f2e10ee763",
-            "flow": "xtls-rprx-vision"
+            "level": 0,
+            "email": "love@example.com"
           }
         ],
         "decryption": "none",
         "fallbacks": [
           {
-            "dest": "81",
-            "xver": 1
+            "dest": "caddy:81"
           },
           {
-            "alpn": "h2",
-            "dest": "82",
+            "path": "/hub", // 必须换成自定义的 PATH
+            "dest": 1234,
             "xver": 1
           }
         ]
@@ -43,42 +30,44 @@
         "network": "tcp",
         "security": "tls",
         "tlsSettings": {
-          "rejectUnknownSni": true,
-          "minVersion": "1.2",
+          "alpn": [
+            "http/1.1"
+          ],
           "certificates": [
             {
-              "ocspStapling": 3600,
               "certificateFile": "/cert/abc.com/abc.com.crt",
               "keyFile": "/cert/abc.com/abc.com.key"
             }
           ]
         }
+      }
+    },
+    {
+      "port": 1234,
+      "listen": "127.0.0.1",
+      "protocol": "vless",
+      "settings": {
+        "clients": [
+          {
+            "id": "98bc7998-8e06-4193-84d2-38f2e10ee763",
+            "level": 0,
+            "email": "love@example.com"
+          }
+        ],
+        "decryption": "none"
       },
-      "sniffing": {
-        "enabled": true,
-        "destOverride": [
-          "http",
-          "tls"
-        ]
+      "streamSettings": {
+        "network": "ws",
+        "security": "none",
+        "wsSettings": {
+          "path": "/hub"
+        }
       }
     }
   ],
   "outbounds": [
     {
-      "protocol": "freedom",
-      "tag": "direct"
-    },
-    {
-      "protocol": "blackhole",
-      "tag": "block"
+      "protocol": "freedom"
     }
-  ],
-  "policy": {
-    "levels": {
-      "0": {
-        "handshake": 2,
-        "connIdle": 120
-      }
-    }
-  }
+  ]
 }
