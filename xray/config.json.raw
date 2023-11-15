@@ -17,7 +17,7 @@
         "decryption": "none",
         "fallbacks": [
           {
-            "dest": "caddy:81"
+            "dest": "caddy:8001"
           },
           {
             "path": "/hub",
